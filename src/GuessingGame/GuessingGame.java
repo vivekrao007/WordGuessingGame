@@ -3,8 +3,8 @@ package GuessingGame;
 public class GuessingGame {
 	
 	private GuessingGameService service = new GuessingGameService();
-
 	private Word word;
+
 	public GuessingGame(){
 		word = service.GetRandomWord();
 	}

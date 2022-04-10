@@ -24,10 +24,10 @@ public class GameServer {
         try {
         	while(true) {
             	Socket clientSocket = serverSocket.accept();
-            	System.err.println("Created socket with client : " + clientSocket.getLocalAddress().getHostName());
-            	ClientHandler client = new ClientHandler(clientSocket,game.GetAWord());
+            	System.out.println("Created socket with client : " + clientSocket.getLocalAddress().getHostName());
+            	ClientHandler client = new ClientHandler(clientSocket,game);
             	clients.add(client);
-            	pool.execute(client);
+            	pool.submit(client);
             	
             }
         }

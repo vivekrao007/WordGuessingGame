@@ -5,19 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import GuessingGame.Word;
 
-public class ClientHandler extends Thread {
+import GuessingGame.GuessingGame;
+
+public class ClientHandler implements Runnable {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private Word word;
-    private String CurrentWord;
+    private GuessingGame GuessingGame; // word object for the current word.
+    private Long startGameTime;
+    private final static int TIME_LIMIT = 10000; // timelimit in milli seconds;
 
-    public ClientHandler(Socket socket,Word word) throws IOException {
+    public ClientHandler(Socket socket, GuessingGame gameObj) throws IOException {
         this.socket = socket;
-        this.word = word;
-        this.CurrentWord = word.getWord();
+        GuessingGame = gameObj;
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
 
@@ -29,13 +30,33 @@ public class ClientHandler extends Thread {
 
     public void run() {
         try {
-        	String request;
+            String request;
+            ClientGame game = new ClientGame(GuessingGame);
+            StartTimer();
+            println("the game has started");
+            println("You have 60 seconds to guess the word");
+            println("The Word is of length + " + GuessingGame.GetAWord().getWord().length());
+
             while ((request = in.readLine()) != null) {
-            	if(request.equals("!start"))
-            		println(CurrentWord);
-                if(request.equals("!hint")){
-                    println(word.getHint());
+                request = request.toLowerCase();
+                if (Checktimer()) {
+                    println("Time is up");
+                    continue;
                 }
+
+                if (request.equals("!hint")) {
+                    game.updateScore(-10);
+                    println(GuessingGame.GetAWord().getHint());
+                    continue;
+                } else {
+                    if (game.VerifyWord(request)) {
+                        game.updateScore(100);
+                        println("You gussed the word, your score is : " + game.GetScore());
+                    } else {
+                        println("Incorrect Guess");
+                    }
+                }
+
             }
             in.close();
         } catch (Exception e1) {
@@ -53,5 +74,15 @@ public class ClientHandler extends Thread {
         System.err.println("closing socket");
     }
 
+    public void StartTimer() {
+        startGameTime = System.currentTimeMillis();
+    }
+
+    public boolean Checktimer() {
+        if (System.currentTimeMillis() - startGameTime >= TIME_LIMIT) {
+            return true;
+        }
+        return false;
+    }
 
 }
