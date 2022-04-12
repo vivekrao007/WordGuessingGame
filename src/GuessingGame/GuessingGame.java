@@ -3,8 +3,8 @@ package GuessingGame;
 public class GuessingGame {
 	
 	private GuessingGameService service = new GuessingGameService();
-	private Word word;
 
+	private Word word;
 	public GuessingGame(){
 		word = service.GetRandomWord();
 	}
@@ -12,7 +12,8 @@ public class GuessingGame {
 		return word;
 	}
 
-	public String getHint(){
+	public String getHint()
+	{
 		return word.getHint();
 	}
 	
