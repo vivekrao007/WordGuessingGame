@@ -18,6 +18,7 @@ public class ServerConnection extends JFrame implements Runnable {
     private JButton quitButton;
     private JTextField guess;
     private JTextArea result;
+    private JTextArea textArea;
     private JLabel word;
     private JLabel hintLabel;
     private static int hint = 0;
@@ -33,12 +34,12 @@ public class ServerConnection extends JFrame implements Runnable {
 
         JFrame frame = new JFrame("Word Guessing Game");
 
-//        startButton = new JButton("Start");
-//        quitButton = new JButton("Quit");
+        quitButton = new JButton("Quit");
+        
+        textArea = new JTextArea( 3, 10 ); // set up JTextArea
+        textArea.setEditable( false );
         
         guess = new JTextField(30);
-//        guess.setText("Click start to begin...");
-        
         
         result = new JTextArea();
         result.setEditable( false );
@@ -54,32 +55,41 @@ public class ServerConnection extends JFrame implements Runnable {
         hintLabel.setForeground(Color.BLACK);
         hintLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-//        Dimension size = startButton.getPreferredSize();
-//        startButton.setBounds(10, 3, size.width, size.height);
+//        Dimension size = quitButton.getPreferredSize();
 //        quitButton.setBounds(220, 3, size.width, size.height);
        
+        Box box1 = Box.createVerticalBox();
+        box1.setAlignmentY(CENTER_ALIGNMENT);
+        box1.setAlignmentX(LEFT_ALIGNMENT);
+        frame.add(box1, BorderLayout.NORTH);
+        box1.add(box1.createVerticalGlue());
+        box1.add(quitButton);
+        box1.add(result);
+        box1.add(box1.createVerticalGlue());
+        
+//        frame.add(result, BorderLayout.NORTH);
 
         
-//        frame.add(startButton);
-//        frame.add(quitButton);
-
-        Box box = Box.createVerticalBox();
-        box.setAlignmentY(CENTER_ALIGNMENT);
-        box.setAlignmentX(LEFT_ALIGNMENT);
-        frame.add(box, BorderLayout.CENTER);
-
-        box.add(Box.createVerticalGlue());
-        box.add(word);
-        box.add(hintLabel);
-//        box.add(startButton);
-//        box.add(quitButton);
-        box.add(Box.createVerticalGlue());
+        Box box2 = Box.createVerticalBox();
+        box2.setAlignmentY(CENTER_ALIGNMENT);
+        box2.setAlignmentX(LEFT_ALIGNMENT);
+        frame.add(box2, BorderLayout.CENTER);
+        box2.add(box2.createVerticalGlue());
+        box2.add(word);
+        box2.add(hintLabel);
+        box2.add(box2.createVerticalGlue());
 
         
-        frame.add(result, BorderLayout.NORTH);
-        frame.add(guess, BorderLayout.SOUTH);
-        box.add(Box.createHorizontalGlue());        
 
+        Box box3 = Box.createVerticalBox();
+        box3.setAlignmentY(CENTER_ALIGNMENT);
+        box3.setAlignmentX(LEFT_ALIGNMENT);
+        frame.add(box3, BorderLayout.SOUTH);
+        box3.add(box2.createVerticalGlue());
+        box3.add(new JScrollPane( textArea ));
+        box3.add(guess);
+        box3.add(box2.createVerticalGlue());
+        
         try {
         	String start;
  			for (int i=0; i<3; i++)
@@ -95,14 +105,14 @@ public class ServerConnection extends JFrame implements Runnable {
  		}
         
        
-//        quitButton.addActionListener(new ActionListener()
-//        {
-//        	public void actionPerformed(ActionEvent e)
-//        	{
-//        		System.out.printf("quit\n");
-//        		out.println("!quit");
-//        	}
-//        });
+        quitButton.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		System.out.printf("quit\n");
+        		out.println("!quit");
+        	}
+        });
 //        if(!start)
 //        {
 //        	 startButton.addActionListener(new ActionListener()
@@ -140,7 +150,9 @@ public class ServerConnection extends JFrame implements Runnable {
              			else
              				hint = 0;
      		        	out.println(playerGuess);
+     		        	textArea.append(playerGuess + '\n');
      		        	guess.setText("");
+
      			        	
      		    	if(hint == 1)
      		    	{
@@ -198,7 +210,6 @@ public class ServerConnection extends JFrame implements Runnable {
      		   }
              });
            
-                     
         frame.setSize(350, 250);
         frame.setVisible( true );
 
