@@ -43,6 +43,7 @@ public class ClientHandler implements Runnable {
              println("You have 60 seconds to guess the word ");
              println("The Word is of length: " + GuessingGame.GetAWord().getWord().length());
 
+            System.out.printf(GuessingGame.GetAWord().getWord());
              while ((request = in.readLine()) != null) {
                  request = request.toLowerCase();
                  if (Checktimer()) {
