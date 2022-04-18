@@ -220,7 +220,6 @@ public class ServerConnection extends JFrame implements Runnable {
     @Override
     public void run() 
     {
-    	
     }
 }
 

@@ -12,30 +12,29 @@ import GuessingGame.GuessingGame;
 public class GameServer {
 
 	private static final int PORT = 4005;
+
 	public static void main(String[] args) throws IOException {
-		
+
 		ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
 		ServerSocket serverSocket = new ServerSocket(PORT);
-        ExecutorService pool = Executors.newFixedThreadPool(3);
+		ExecutorService pool = Executors.newFixedThreadPool(3);
 		GuessingGame game = new GuessingGame();
-		
-        System.out.println("ChatServer started");
+
+		System.out.println("ChatServer started");
 		System.out.println("[SERVER] waiting for client connections");
-        try {
-        	while(true) 
-        	{
-            	Socket clientSocket = serverSocket.accept();
-            	System.out.println("Created socket with client : " + clientSocket.getLocalAddress().getHostName());
-            	ClientHandler client = new ClientHandler(clientSocket,game);
-            	clients.add(client);
-            	pool.submit(client);
-            }
-        }
-        finally {
-        	serverSocket.close();
-        	pool.shutdown();
-        }
-        
+		try {
+			while (true) {
+				Socket clientSocket = serverSocket.accept();
+				System.out.println("Created socket with client : " + clientSocket.getLocalAddress().getHostName());
+				System.out.println(game.GetWord().getWord());
+				ClientHandler client = new ClientHandler(clientSocket, game);
+				clients.add(client);
+				pool.submit(client);
+			}
+		} finally {
+			serverSocket.close();
+			pool.shutdown();
+		}
 
 	}
 
