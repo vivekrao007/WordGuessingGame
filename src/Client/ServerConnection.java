@@ -220,6 +220,22 @@ public class ServerConnection extends JFrame implements Runnable {
     @Override
     public void run() 
     {
+		try {
+            while(true){
+                String serverResponse = in.readLine();
+                if(serverResponse == null) break;
+                System.out.println("Server says : " + serverResponse);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally{
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import GuessingGame.GuessingGame;
 import GuessingGame.Word;
 
-public class ClientHandler implements Runnable {
+public class ClientHandler extends Thread {
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
@@ -45,7 +45,7 @@ public class ClientHandler implements Runnable {
 
             while ((request = in.readLine()) != null) {
                 request = request.toLowerCase();
-                
+
                 if (IsMatchCompleted()) {
                     println("You have completed the game");
                     println("Your score is : " + GetScore());
@@ -56,10 +56,9 @@ public class ClientHandler implements Runnable {
                 if (Checktimer()) {
                     println("Time is up");
                     println(CurrentWord.getWord());
+                    startNewRound();
                     continue;
                 }
-
-                
 
                 if (request.equals("!newgame") && Checktimer()) {
                     startNewRound();
@@ -129,7 +128,7 @@ public class ClientHandler implements Runnable {
         if (!IsMatchCompleted()) {
             CurrentWord = GuessingGame.GetWordAtIndex(Round);
             StartTimer();
-            println("Starting new Round");
+            println("Starting new Round ");
             println("Round : " + Round + "/" + GuessingGame.GetNumberOfWord());
             println("You have " + (TIME_LIMIT / 1000) + " seconds to guess the word ");
             println("The Word is of length: " + CurrentWord.getWord().length());
@@ -140,15 +139,17 @@ public class ClientHandler implements Runnable {
     }
 
     private void BroadCastWinner() {
+        boolean EveyoneCompletedGame = false;
         for (ClientHandler client : AllClients) {
-            if (!client.IsMatchCompleted())
-                break;
-
-            client.println(
-                    "The Game has been completed : " +
-                            socket.getLocalAddress().getHostName() +
-                            " is the winner");
+            if(!client.isAlive()){
+                AllClients.remove(client);
+            }
+            if (client.IsMatchCompleted())
+                EveyoneCompletedGame = true;
 
         }
+        if (EveyoneCompletedGame)
+            println("The Game has been completed : " + socket.getLocalAddress().getHostName() +
+                    " is the winner");
     }
 }

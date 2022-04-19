@@ -17,21 +17,21 @@ public class Client {
         ServerConnection serverConn = new ServerConnection(socket);
         new Thread(serverConn).start();
 
-    //    BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-    //    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+       BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
+       PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-    //    while (true) {
-    //        System.out.printf("> ");
+       while (true) {
+           System.out.printf("> ");
 
-    //        String command = keyboard.readLine();
+           String command = keyboard.readLine();
            
-    //        if (command.equals("!quit"))
-    //            break;
+           if (command.equals("!quit"))
+               break;
 
-    //        out.println(command);
-    //    }
+           out.println(command);
+       }
 
-    //    socket.close();
-    //    System.exit(0);
+       socket.close();
+       System.exit(0);
      }
 }
