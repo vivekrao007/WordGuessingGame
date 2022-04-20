@@ -5,10 +5,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
 
 import GuessingGame.GuessingGame;
 import GuessingGame.Word;
+import java.util.ArrayList;
 
 public class ClientHandler extends Thread {
     private Socket socket;
@@ -41,40 +41,58 @@ public class ClientHandler extends Thread {
         try {
             String request;
             startNewRound();
-            println(" --- The game has started ---");
+            println(" " + GetScore());
 
-            while ((request = in.readLine()) != null) {
+            while ((request = in.readLine()) != null) 
+            {
                 request = request.toLowerCase();
-
-                if (IsMatchCompleted()) {
-                    println("You have completed the game");
-                    println("Your score is : " + GetScore());
-                    BroadCastWinner();
-                    continue;
-                }
-
                 if (Checktimer()) {
                     println("Time is up");
                     println(CurrentWord.getWord());
+                    println(" " + GetScore());
                     startNewRound();
                     continue;
                 }
 
-                if (request.equals("!newgame") && Checktimer()) {
+                if (IsMatchCompleted()) 
+                {
+                    println("You have completed the game");
+//                    println("Your score is : " + GetScore());
+                    println(" " + GetScore());
+                    println("BroadCastWinner");
+                    BroadCastWinner();
+                    continue;
+                }
+                if (request.equals("!newgame") && Checktimer()) 
+                {
                     startNewRound();
                 }
-                if (request.equals("!hint")) {
+                if (request.equals("!hint")) 
+                {
                     updateScore(-10);
                     println(CurrentWord.getHint());
+                    println(" " + GetScore());
                     continue;
-                } else {
+                } 
+                else if (request.equals("!quit")) 
+                {
+               	 	System.out.printf("Quit the game!\n");
+                    break;
+                }
+                else 
+                {
+
                     if (VerifyWord(request)) {
                         updateScore(100);
                         println("Correct");
-                        println("You gussed the word, your score is : " + GetScore());
+                        println("You gussed the word");
+                        println(" " + GetScore());
                         startNewRound();
-                    } else {
+                    } 
+                    else 
+                    {
                         println("Incorrect Guess");
+                        println(" " + GetScore());
                     }
                 }
 
@@ -95,13 +113,15 @@ public class ClientHandler extends Thread {
         System.err.println("closing socket");
     }
 
-    public void StartTimer() {
+    public void StartTimer() 
+    {
         startGameTime = System.currentTimeMillis();
     }
 
     public boolean Checktimer() {
-        long timeDiff = System.currentTimeMillis() - startGameTime;
-        if (timeDiff >= TIME_LIMIT) {
+    	long timeDiff = System.currentTimeMillis() - startGameTime;
+        if (timeDiff >= TIME_LIMIT) 
+        {
             return true;
         }
         return false;
@@ -116,40 +136,58 @@ public class ClientHandler extends Thread {
     }
 
     public boolean VerifyWord(String text) {
-        return CurrentWord.getWord().equals(text);
+    	if (CurrentWord.getWord().equals(text)) 
+    	{
+            return true;
+        }
+    	else
+    	{
+            return false;
+    	}
+//        return CurrentWord.getWord().equals(text);
     }
 
-    public boolean IsMatchCompleted() {
+    public boolean IsMatchCompleted() 
+    {
         return Round > GuessingGame.GetNumberOfWord();
     }
 
-    private void startNewRound() {
+    private void startNewRound() 
+    {
         Round++;
+    	println("startNewRound");
         if (!IsMatchCompleted()) {
             CurrentWord = GuessingGame.GetWordAtIndex(Round);
             StartTimer();
-            println("Starting new Round ");
+            println("3");
+            println("Starting new round ");
             println("Round : " + Round + "/" + GuessingGame.GetNumberOfWord());
             println("You have " + (TIME_LIMIT / 1000) + " seconds to guess the word ");
-            println("The Word is of length: " + CurrentWord.getWord().length());
-        } else {
+            println("The word is of length: " + CurrentWord.getWord().length());
+        } 
+        else 
+        {
+        	println("1");
             println("Your game is completed. waiting for other players to complete the game");
+
+//            println("BroadCastWinner");
             BroadCastWinner();
         }
     }
-
-    private void BroadCastWinner() {
+    private void BroadCastWinner() 
+    {
         boolean EveyoneCompletedGame = false;
-        for (ClientHandler client : AllClients) {
-            if(!client.isAlive()){
+
+        for (ClientHandler client : AllClients) 
+        {
+        	if(!client.isAlive()){
                 AllClients.remove(client);
             }
             if (client.IsMatchCompleted())
                 EveyoneCompletedGame = true;
-
         }
         if (EveyoneCompletedGame)
-            println("The Game has been completed : " + socket.getLocalAddress().getHostName() +
-                    " is the winner");
+            println("The Game has been completed : " + socket.getLocalAddress().getHostName() +" is the winner");
+    
     }
 }
