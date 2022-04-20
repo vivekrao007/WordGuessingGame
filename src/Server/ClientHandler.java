@@ -16,7 +16,7 @@ public class ClientHandler extends Thread {
     private BufferedReader in;
     private GuessingGame GuessingGame; // word object for the current word.
     private Long startGameTime;
-    private final static int TIME_LIMIT = 10000; // timelimit in milli seconds;
+    private final static int TIME_LIMIT = 60000; // timelimit in milli seconds;
     private int Round = 0;
     private int Score; // keep track of the score of current player.
     // private Boolean Completed; // true for word gussed correctly;
