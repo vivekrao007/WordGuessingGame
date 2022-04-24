@@ -26,7 +26,7 @@ public class ClientHandler extends Thread {
     // private Boolean Completed; // true for word gussed correctly;
     private Word CurrentWord;
     ArrayList<ClientHandler> AllClients;
-    private static final String UNIQUE_ID = UUID.randomUUID().toString();
+    private final String UNIQUE_ID = UUID.randomUUID().toString();
 
     public ClientHandler(Socket socket, GuessingGame gameObj, ArrayList<ClientHandler> clients) throws IOException {
         this.socket = socket;
