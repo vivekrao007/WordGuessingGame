@@ -26,7 +26,7 @@ public class ClientHandler extends Thread {
     // private Boolean Completed; // true for word gussed correctly;
     private Word CurrentWord;
     ArrayList<ClientHandler> AllClients;
-    private final String uniqueID = UUID.randomUUID().toString();
+    private static final String UNIQUE_ID = UUID.randomUUID().toString();
 
     public ClientHandler(Socket socket, GuessingGame gameObj, ArrayList<ClientHandler> clients) throws IOException {
         this.socket = socket;
@@ -47,7 +47,7 @@ public class ClientHandler extends Thread {
             
             String request;
             startNewRound();
-            println("Connect to game server your ID : " + uniqueID);
+            println("Connect to game server your ID : " + UNIQUE_ID);
             println(" " + GetScore());
 
             while ((request = in.readLine()) != null) {
@@ -181,7 +181,7 @@ public class ClientHandler extends Thread {
             ArrayList<ClientHandler> temp = (ArrayList<ClientHandler>) AllClients.stream()
                     .sorted(compareByScore).collect(Collectors.toList());
             for (ClientHandler client : AllClients) {
-                client.println("Game has been completed : " + temp.get(0).uniqueID + " is the winner");
+                client.println("Game has been completed : " + temp.get(0).UNIQUE_ID + " is the winner");
             }
         }
 
