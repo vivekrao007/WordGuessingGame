@@ -58,7 +58,7 @@ public class ServerConnection extends JFrame implements Runnable {
 		timer.setFont(font3);
 		timer.setForeground(Color.BLACK);
 		timer.setAlignmentX(Component.CENTER_ALIGNMENT);
-		timer.setText("timer");
+//		timer.setText("timer");
 		
 		quitButton = new JButton("Quit");
         quitButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -224,30 +224,13 @@ public class ServerConnection extends JFrame implements Runnable {
  						String isWinner;
  						if((isWinner = in.readLine()) != null) 
 
- 							if(isWinner.equals("startNewRound"))
- 		    	         	{
- 								isWinner = in.readLine();
- 				         		if(isWinner.equals("3"))
- 				             	{
- 				             		for (int i=0; i<3; i++)
- 				          			{
- 				             			isWinner = in.readLine();
- 				          				result.append(isWinner + "\n");
- 				          			}	
- 				             	}
- 				             	else
- 				             	{
- 				             		isWinner = in.readLine();
- 				          			result.append(isWinner + "\n");
- 				             	}
- 				         		isWinner = in.readLine();
- 				     			result.append(isWinner + "\n");
- 		    	         	}
- 							else if(isWinner.equals("Correct"))
+ 							
+ 							if(isWinner.equals("Correct"))
  							{
  								isWinner = in.readLine();
- 								result.append('\n' + isWinner);
+ 								result.append('\n' + isWinner + '\n');
  								textArea.setText("");
+ 								
 // 								out.println("!newgame");
  							}
  							else if(isWinner.equals("Time is up"))
@@ -264,9 +247,29 @@ public class ServerConnection extends JFrame implements Runnable {
  								result.append('\n' + isWinner);
 
  							}
+ 						
  						playerScore = in.readLine();
 	    				score.setText(playerScore);
-
+	    				isWinner = in.readLine();
+	    				if(isWinner.equals("startNewRound"))
+	    	         	{
+							isWinner = in.readLine();
+			         		if(isWinner.equals("3"))
+			             	{
+			             		for (int i=0; i<3; i++)
+			          			{
+			             			isWinner = in.readLine();
+			          				result.append(isWinner + "\n");
+			          			}	
+			             	}
+			             	else
+			             	{
+			             		isWinner = in.readLine();
+			          			result.append(isWinner + "\n");
+			             	}
+			         		isWinner = in.readLine();
+			     			result.append(isWinner + "\n");
+	    	         	}
  					}
  					catch (IOException e1) 
  					{
@@ -328,22 +331,22 @@ public class ServerConnection extends JFrame implements Runnable {
   			e1.printStackTrace();
   		}
     	 
-   	 try {
-            while(true){
-                String serverResponse = in.readLine();
-                if(serverResponse == null) break;
-                System.out.println("Server says : " + serverResponse);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally{
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//    	 try {
+//             while(true){
+//                 String serverResponse = in.readLine();
+//                 if(serverResponse == null) break;
+//                 System.out.println("Server says : " + serverResponse);
+//             }
+//         } catch (IOException e) {
+//             e.printStackTrace();
+//         }
+//         finally{
+//             try {
+//                 in.close();
+//             } catch (IOException e) {
+//                 e.printStackTrace();
+//             }
+//         }
     }
 }
 
