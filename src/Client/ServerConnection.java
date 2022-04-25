@@ -19,6 +19,7 @@ public class ServerConnection extends JFrame implements Runnable {
     private PrintWriter out;
     private JButton startButton;
     private JButton quitButton;
+    private JButton hintButton;
     private JTextField guess;
     private JTextArea result;
     private JTextArea textArea;
@@ -48,26 +49,29 @@ public class ServerConnection extends JFrame implements Runnable {
         
         guess = new JTextField(30);
         
-        result = new JTextArea(2, 1);
+        result = new JTextArea(0, 0);
         result.setEditable( false );
 		result.append("\n");
 		result.setForeground(Color.BLUE);
         result.setFont(font);
         
-		timer = new JLabel();
-		timer.setFont(font3);
-		timer.setForeground(Color.BLACK);
-		timer.setAlignmentX(Component.CENTER_ALIGNMENT);
-		timer.setText("timer");
+//		timer = new JLabel();
+//		timer.setFont(font3);
+//		timer.setForeground(Color.BLACK);
+//		timer.setAlignmentX(Component.CENTER_ALIGNMENT);
+//		timer.setText("timer");
 		
+        hintButton = new JButton("Hint");
+        hintButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
 		quitButton = new JButton("Quit");
         quitButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
         
 		score = new JLabel();
 		score.setFont(font3);
 		score.setForeground(Color.BLACK);
-		score.setAlignmentX(Component.LEFT_ALIGNMENT);
-        
+		score.setAlignmentX(Component.CENTER_ALIGNMENT);
+//		score.setAlignmentX(Component.LEFT_ALIGNMENT);        
 
         word = new JLabel();
         word.setFont(font);
@@ -86,10 +90,10 @@ public class ServerConnection extends JFrame implements Runnable {
         box1.setAlignmentY(LEFT_ALIGNMENT);
         box1.setAlignmentX(LEFT_ALIGNMENT);
         frame.add(box1, BorderLayout.NORTH);
-        box1.add(score);
+        box1.add(hintButton);
         box1.add(box1.createHorizontalGlue());
 
-        box1.add(timer);
+        box1.add(score);
         box1.add(box1.createHorizontalGlue());
 
         box1.add(quitButton);
@@ -130,9 +134,72 @@ public class ServerConnection extends JFrame implements Runnable {
         box3.add(guess);
         box3.add(box2.createVerticalGlue());
         
-        frame.setSize(350, 250);
+        frame.setSize(350, 350);
         frame.setVisible( true );
 
+        hintButton.addActionListener(new ActionListener()
+        {
+        	public void actionPerformed(ActionEvent e)
+        	{
+        		String hintResult;
+		    		try {
+		    			out.println("!hint");
+// 		    			while ((hintResult = in.readLine()) != null) 
+		    				hintResult = in.readLine();
+		    				if(hintResult.equals("startNewRound"))
+		    	         	{
+//		    					System.out.println("New round!!");
+		    					hintResult = in.readLine();
+				         		if(hintResult.equals("3"))
+				             	{
+				             		for (int i=0; i<4; i++)
+				          			{
+				             			hintResult = in.readLine();
+				          				result.append(hintResult + '\n');
+				          			}	
+				             	}
+				             	else
+				             	{
+				             		for (int i=0; i<3; i++)
+				          			{
+				             			hintResult = in.readLine();
+					          			result.append(hintResult + '\n');
+				          			}	
+
+				          			guess.setEditable(false);
+				          			hintButton.setEnabled(false);
+//				             		hintResult = in.readLine();
+//				          			result.append(hintResult + '\n');
+//				             		hintResult = in.readLine();
+//				          			result.append(hintResult + '\n');
+				             	}
+				         		hintResult = in.readLine();
+				     			result.append(hintResult + '\n');
+		    	         	}
+		    				else if(!hintResult.equals("Time is up"))
+		    				{
+		    					String hint_Result = "Hint: " + hintResult;
+		    					result.setText("\nA hint has been displayed");
+ 		    				hintLabel.setText(hint_Result);
+		    				}
+		    				else
+		    				{
+		    					result.setText('\n' + hintResult);
+								String ans = in.readLine();
+								word.setText("The correct word is: " + ans);
+								textArea.setText("");
+								out.println("!newgame");
+		    				}
+		    				playerScore = in.readLine();
+		    				score.setText(playerScore);
+		    		}
+		    		catch (IOException e1) 
+		    		{
+		    			e1.printStackTrace();
+		    		}
+        	}
+        });
+        
         
         quitButton.addActionListener(new ActionListener()
         {
@@ -154,106 +221,89 @@ public class ServerConnection extends JFrame implements Runnable {
  			   	result.setText("");
  	    		String playerGuess = guess.getText();
  	    		if(playerGuess != null)
- 	    			if(playerGuess.equals("!hint"))
- 	    			{
- 	    				hint = 1;
- 	    			}
-         			else
-         				hint = 0;
+// 	    			if(playerGuess.equals("!hint"))
+// 	    			{
+// 	    				hint = 1;
+// 	    			}
+//         			else
+//         				hint = 0;
  		        	out.println(playerGuess);
  		        	textArea.append(playerGuess + '\n');
  		        	guess.setText("");
 	        	
- 		    	if(hint == 1)
- 		    	{
+// 		    	if(hint == 1)
+// 		    	{
 
- 		    		String hintResult;
- 		    		try {
-//     		    			while ((hintResult = in.readLine()) != null) 
- 		    				hintResult = in.readLine();
- 		    				if(hintResult.equals("startNewRound"))
- 		    	         	{
-// 		    					System.out.println("New round!!");
- 		    					hintResult = in.readLine();
- 				         		if(hintResult.equals("3"))
- 				             	{
- 				             		for (int i=0; i<3; i++)
- 				          			{
- 				             			hintResult = in.readLine();
- 				          				result.append(hintResult + "\n");
- 				          			}	
- 				             	}
- 				             	else
- 				             	{
- 				             		hintResult = in.readLine();
- 				          			result.append(hintResult + "\n");
- 				             		hintResult = in.readLine();
- 				          			result.append(hintResult + "\n");
- 				             	}
- 				         		hintResult = in.readLine();
- 				     			result.append(hintResult + "\n");
- 		    	         	}
- 		    				else if(!hintResult.equals("Time is up"))
- 		    				{
- 		    					String hint_Result = "Hint: " + hintResult;
- 		    					result.setText("\nA hint has been displayed");
-     		    				hintLabel.setText(hint_Result);
- 		    				}
- 		    				else
- 		    				{
- 		    					result.setText('\n' + hintResult);
- 								String ans = in.readLine();
- 								word.setText("The correct word is: " + ans);
- 								textArea.setText("");
- 								out.println("!newgame");
- 		    				}
- 		    				playerScore = in.readLine();
- 		    				score.setText(playerScore);
- 		    		}
- 		    		catch (IOException e1) 
- 		    		{
- 		    			e1.printStackTrace();
- 		    		}
- 		    		hint = 0;
- 		    	}
- 		    	else
- 		    	{
+// 		    		String hintResult;
+// 		    		try {
+////     		    			while ((hintResult = in.readLine()) != null) 
+// 		    				hintResult = in.readLine();
+// 		    				if(hintResult.equals("startNewRound"))
+// 		    	         	{
+//// 		    					System.out.println("New round!!");
+// 		    					hintResult = in.readLine();
+// 				         		if(hintResult.equals("3"))
+// 				             	{
+// 				             		for (int i=0; i<3; i++)
+// 				          			{
+// 				             			hintResult = in.readLine();
+// 				          				result.append(hintResult + '\n');
+// 				          			}	
+// 				             	}
+// 				             	else
+// 				             	{
+// 				             		hintResult = in.readLine();
+// 				          			result.append(hintResult + '\n');
+// 				             		hintResult = in.readLine();
+// 				          			result.append(hintResult + '\n');
+// 				             	}
+// 				         		hintResult = in.readLine();
+// 				     			result.append(hintResult + '\n');
+// 		    	         	}
+// 		    				else if(!hintResult.equals("Time is up"))
+// 		    				{
+// 		    					String hint_Result = "Hint: " + hintResult;
+// 		    					result.setText("\nA hint has been displayed");
+//     		    				hintLabel.setText(hint_Result);
+// 		    				}
+// 		    				else
+// 		    				{
+// 		    					result.setText('\n' + hintResult);
+// 								String ans = in.readLine();
+// 								word.setText("The correct word is: " + ans);
+// 								textArea.setText("");
+// 								out.println("!newgame");
+// 		    				}
+// 		    				playerScore = in.readLine();
+// 		    				score.setText(playerScore);
+// 		    		}
+// 		    		catch (IOException e1) 
+// 		    		{
+// 		    			e1.printStackTrace();
+// 		    		}
+// 		    		hint = 0;
+// 		    	}
+// 		    	else
+// 		    	{
  			    	try 
  					{
 
  						String isWinner;
  						if((isWinner = in.readLine()) != null) 
 
- 							if(isWinner.equals("startNewRound"))
- 		    	         	{
- 								isWinner = in.readLine();
- 				         		if(isWinner.equals("3"))
- 				             	{
- 				             		for (int i=0; i<3; i++)
- 				          			{
- 				             			isWinner = in.readLine();
- 				          				result.append(isWinner + "\n");
- 				          			}	
- 				             	}
- 				             	else
- 				             	{
- 				             		isWinner = in.readLine();
- 				          			result.append(isWinner + "\n");
- 				             	}
- 				         		isWinner = in.readLine();
- 				     			result.append(isWinner + "\n");
- 		    	         	}
- 							else if(isWinner.equals("Correct"))
+ 							
+ 							if(isWinner.equals("Correct"))
  							{
  								isWinner = in.readLine();
- 								result.append('\n' + isWinner);
+ 								result.append('\n' + isWinner + '\n');
  								textArea.setText("");
+ 								
 // 								out.println("!newgame");
  							}
  							else if(isWinner.equals("Time is up"))
  							{
 
- 								result.setText('\n' + isWinner);
+ 								result.setText('\n' + isWinner + '\n');
  								String ans = in.readLine();
  								word.setText("The correct word is " + ans);
  								textArea.setText("");
@@ -264,15 +314,45 @@ public class ServerConnection extends JFrame implements Runnable {
  								result.append('\n' + isWinner);
 
  							}
+ 						
  						playerScore = in.readLine();
 	    				score.setText(playerScore);
-
+	    				isWinner = in.readLine();
+	    				if(isWinner.equals("startNewRound"))
+	    	         	{
+							isWinner = in.readLine();
+			         		if(isWinner.equals("3"))
+			             	{
+			             		for (int i=0; i<4; i++)
+			          			{
+			             			isWinner = in.readLine();
+			          				result.append(isWinner + '\n');
+			          			}	
+			             	}
+			             	else
+			             	{
+			             		for (int i=0; i<3; i++)
+			          			{
+			             			isWinner = in.readLine();
+				          			result.append(isWinner + '\n');
+			          			}	
+//			             		isWinner = in.readLine();
+//			          			result.append(isWinner + '\n');
+//			          			isWinner = in.readLine();
+//				     			result.append(isWinner + '\n');
+			          			guess.setEditable(false);
+			          			hintButton.setEnabled(false);
+			             	}
+			         		
+//			         		isWinner = in.readLine();
+//			     			result.append(isWinner + '\n');
+	    	         	}
  					}
  					catch (IOException e1) 
  					{
  						e1.printStackTrace();
  					}
- 		    	}
+// 		    	}
  		   }
          });
     }
@@ -281,22 +361,7 @@ public class ServerConnection extends JFrame implements Runnable {
     @Override
     public void run() 
     {
-//    	Timer time = new Timer();
-//
-//        time.scheduleAtFixedRate(new TimerTask() {
-//            int i = 20;
-//
-//            public void run() {
-//
-//                timer.setText("Time left: " + i);
-//                i--;
-//
-//                if (i < 0) {
-//                    time.cancel();
-//                    timer.setText("Time Over");
-//                }
-//            }
-//        }, 0, 1000);
+
     	 try {
          	String start = in.readLine();
          	if(start.equals("startNewRound"))
@@ -307,18 +372,27 @@ public class ServerConnection extends JFrame implements Runnable {
              		for (int i=0; i<3; i++)
           			{
           				start = in.readLine();
-          				result.append(start + "\n");
+          				result.append(start + '\n');
           			}	
              	}
              	else
              	{
-             		start = in.readLine();
-          			result.append(start + "\n");
-          			start = in.readLine();
-          			result.append(start + "\n");
+             		for (int i=0; i<3; i++)
+          			{
+          				start = in.readLine();
+          				result.append(start + '\n');
+          			}	
+             		guess.setEditable(false);
+          			hintButton.setEnabled(false);
+          			
+//             		start = in.readLine();
+//          			result.append(start + '\n');
+//          			start = in.readLine();
+//          			result.append(start + '\n');
+
              	}
              	start = in.readLine();
-     			result.append(start + "\n");
+     			result.append(start + '\n');
       			playerScore = in.readLine();
       			score.setText(playerScore);
       		}
@@ -327,23 +401,6 @@ public class ServerConnection extends JFrame implements Runnable {
   		{
   			e1.printStackTrace();
   		}
-    	 
-   	 try {
-            while(true){
-                String serverResponse = in.readLine();
-                if(serverResponse == null) break;
-                System.out.println("Server says : " + serverResponse);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally{
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
 
