@@ -26,7 +26,7 @@ public class ClientHandler extends Thread {
     private Word CurrentWord;
     ArrayList<ClientHandler> AllClients;
     private final String UNIQUE_ID = UUID.randomUUID().toString();
-
+    
     public ClientHandler(Socket socket, GuessingGame gameObj, ArrayList<ClientHandler> clients) throws IOException {
         this.socket = socket;
         GuessingGame = gameObj;
@@ -46,7 +46,7 @@ public class ClientHandler extends Thread {
             String request;
             startNewRound();
             println(" " + GetScore());
-
+            	
             while ((request = in.readLine()) != null) 
             {
                 request = request.toLowerCase();
@@ -84,7 +84,7 @@ public class ClientHandler extends Thread {
                     println("DoNotStartNewRound");
                     break;
                 }
-                else 
+                else
                 {
 
                     if (VerifyWord(request)) {
@@ -101,7 +101,6 @@ public class ClientHandler extends Thread {
                         println("DoNotStartNewRound");
                     }
                 }
-
             }
             in.close();
         } catch (Exception e1) {
@@ -171,7 +170,8 @@ public class ClientHandler extends Thread {
         else 
         {
         	println("1");
-            println("Your game is completed. waiting for other players to complete the game");
+            println("Your game is completed.");
+            println("Waiting for other players to complete the game..");
 
 //            println("BroadCastWinner");
             BroadCastWinner();
