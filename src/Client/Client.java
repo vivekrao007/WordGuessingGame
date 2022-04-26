@@ -8,10 +8,14 @@ import java.net.Socket;
 
 public class Client {
     
-    private static final String SERVER_IP = "127.0.0.1";
+    private static String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 4005;
     
     public static void main(String[] args) throws IOException {
+
+        if(args.length > 0 && args[0] != null){
+            SERVER_IP = args[0];       
+         }
     	Socket socket = new Socket(SERVER_IP, SERVER_PORT);
 
         ServerConnection serverConn = new ServerConnection(socket);
