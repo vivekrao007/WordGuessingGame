@@ -26,7 +26,6 @@ public class GameServer {
 			while (true) {
 				Socket clientSocket = serverSocket.accept();
 				System.out.println("Created socket with client : " + clientSocket.getLocalAddress().getHostName());
-				System.out.println(game.GetWord().getWord());
 				ClientHandler client = new ClientHandler(clientSocket, game, clients);
 				clients.add(client);
 				pool.submit(client);
