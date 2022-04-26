@@ -188,6 +188,7 @@ public class ServerConnection extends JFrame implements Runnable {
 								String ans = in.readLine();
 								word.setText("The correct word is: " + ans);
 								textArea.setText("");
+								hintLabel.setText("");
 								out.println("!newgame");
 		    				}
 		    				playerScore = in.readLine();
@@ -272,6 +273,7 @@ public class ServerConnection extends JFrame implements Runnable {
 // 								String ans = in.readLine();
 // 								word.setText("The correct word is: " + ans);
 // 								textArea.setText("");
+// 		        				hintLabel.setText("");
 // 								out.println("!newgame");
 // 		    				}
 // 		    				playerScore = in.readLine();
@@ -297,7 +299,7 @@ public class ServerConnection extends JFrame implements Runnable {
  								isWinner = in.readLine();
  								result.append('\n' + isWinner + '\n');
  								textArea.setText("");
- 								
+ 								hintLabel.setText("");
 // 								out.println("!newgame");
  							}
  							else if(isWinner.equals("Time is up"))
@@ -307,6 +309,7 @@ public class ServerConnection extends JFrame implements Runnable {
  								String ans = in.readLine();
  								word.setText("The correct word is " + ans);
  								textArea.setText("");
+ 								hintLabel.setText("");
 // 								out.println("!newgame");
  							}
  							else
