@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import javax.swing.*;
-
 import java.awt.event.*;
 
 public class ServerConnection extends JFrame implements Runnable {
@@ -116,48 +115,8 @@ public class ServerConnection extends JFrame implements Runnable {
 
 		hintButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String hintResult;
-				try {
 					out.println("!hint");
-					// while ((hintResult = in.readLine()) != null)
-					hintResult = in.readLine();
-					if (hintResult.equals("startNewRound")) {
-						// System.out.println("New round!!");
-						hintResult = in.readLine();
-						if (hintResult.equals("3")) {
-							for (int i = 0; i < 4; i++) {
-								hintResult = in.readLine();
-								result.append(hintResult + '\n');
-							}
-						} else {
-							for (int i = 0; i < 2; i++) {
-								hintResult = in.readLine();
-								result.append(hintResult + '\n');
-							}
-							finishGame = 1;
-							guess.setEnabled(false);
-							hintButton.setEnabled(false);
 
-						}
-						hintResult = in.readLine();
-						result.append(hintResult + '\n');
-					} else if (!hintResult.equals("Time is up")) {
-						String hint_Result = "Hint: " + hintResult;
-						result.setText("\nA hint has been displayed");
-						hintLabel.setText(hint_Result);
-					} else {
-						result.setText('\n' + hintResult);
-						String ans = in.readLine();
-						word.setText("The correct word is: " + ans);
-						textArea.setText("");
-						hintLabel.setText("");
-						out.println("!newgame");
-					}
-					playerScore = in.readLine();
-					score.setText(playerScore);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			}
 		});
 
@@ -165,7 +124,6 @@ public class ServerConnection extends JFrame implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 				out.println("!quit");
 				frame.setVisible(false);
-				// System.exit(0);
 			}
 		});
 
@@ -188,58 +146,6 @@ public class ServerConnection extends JFrame implements Runnable {
 				textArea.append(playerGuess + '\n');
 				guess.setText("");
 
-				// try {
-				// String isWinner;
-				// if ((isWinner = in.readLine()) != null)
-
-				// if (isWinner.equals("Correct")) {
-				// isWinner = in.readLine();
-				// result.append('\n' + isWinner + '\n');
-				// textArea.setText("");
-				// hintLabel.setText("");
-				// // out.println("!newgame");
-				// } else if (isWinner.equals("Time is up")) {
-
-				// result.setText('\n' + isWinner + '\n');
-				// String ans = in.readLine();
-				// word.setText("The correct word is " + ans);
-				// textArea.setText("");
-				// hintLabel.setText("");
-				// // out.println("!newgame");
-				// } else {
-				// result.append('\n' + isWinner);
-				// }
-
-				// playerScore = in.readLine();
-				// score.setText(playerScore);
-				// isWinner = in.readLine();
-				// if (isWinner.equals("startNewRound")) {
-				// isWinner = in.readLine();
-				// if (isWinner.equals("3")) {
-				// for (int i = 0; i < 4; i++) {
-				// isWinner = in.readLine();
-				// result.append(isWinner + '\n');
-				// }
-				// } else {
-				// for (int i = 0; i < 2; i++) {
-				// isWinner = in.readLine();
-				// result.append(isWinner + '\n');
-
-				// }
-
-				// // finishGame = 1;
-
-				// guess.setEnabled(false);
-				// hintButton.setEnabled(false);
-
-				// }
-				// }
-				// }
-
-				// // | InterruptedException
-				// catch (IOException e1) {
-				// e1.printStackTrace();
-				// }
 
 			}
 		});
@@ -250,12 +156,41 @@ public class ServerConnection extends JFrame implements Runnable {
 
 		try {
 			if (message.equals("startNewRound")) {
-				result.setText("");
+				result.setText("\n");
+				word.setText("");
 				return;
 			}
-			result.append(message + '\n');
-			textArea.setText("");
-			hintLabel.setText("");
+			else if(message.contains("Hint"))
+			{
+				result.setText("\nA hint has been displayed");
+				hintLabel.setText(message);
+			}
+			else if(message.contains("Score"))
+			{
+				message = message.replaceAll("Score", "");
+				score.setText(message);
+			}
+			else if(message.contains("Time is up")) {
+				String[] newmsg = message.split("The", 2);
+				result.append(newmsg[0] + '\n');
+				System.out.println(newmsg[0]);
+				word.setText("The " + newmsg[1]);
+				textArea.setText("");
+				hintLabel.setText("");
+			}
+			else if(message.contains("Incorrect Guess")) {
+				result.append(message + '\n');
+			}
+			else{
+				if(message.contains("completed")) {
+					guess.setEnabled(false);
+          			hintButton.setEnabled(false);
+				}
+				result.append(message + '\n');
+				textArea.setText("");
+				hintLabel.setText("");
+			}
+			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -264,37 +199,6 @@ public class ServerConnection extends JFrame implements Runnable {
 	@Override
 	public void run() {
 
-		// try {
-		// String start = in.readLine();
-		// if (start.equals("startNewRound")) {
-		// start = in.readLine();
-		// if (start.equals("3")) {
-		// for (int i = 0; i < 3; i++) {
-		// start = in.readLine();
-		// result.append(start + '\n');
-		// }
-		// } else {
-		// for (int i = 0; i < 2; i++) {
-		// start = in.readLine();
-		// result.append(start + '\n');
-		// }
-		// guess.setEnabled(false);
-		// hintButton.setEnabled(false);
-
-		// // start = in.readLine();
-		// // result.append(start + '\n');
-		// // start = in.readLine();
-		// // result.append(start + '\n');
-
-		// }
-		// start = in.readLine();
-		// result.append(start + '\n');
-		// playerScore = in.readLine();
-		// score.setText(playerScore);
-		// }
-		// } catch (IOException e1) {
-		// e1.printStackTrace();
-		// }
 
 		try {
 			while (true) {
@@ -302,7 +206,7 @@ public class ServerConnection extends JFrame implements Runnable {
 				if (serverResponse == null)
 					break;
 				ProcessMessage(serverResponse);
-				System.out.println("Server says : " + serverResponse);
+//				System.out.println("Server says : " + serverResponse);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
