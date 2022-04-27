@@ -19,6 +19,7 @@ public class GameServer {
 		ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
 		ServerSocket serverSocket = new ServerSocket(PORT);
 		ExecutorService pool = Executors.newFixedThreadPool(TOTAL_CLIENTS);
+
 		GuessingGame game = new GuessingGame();
 
 		System.out.println("Game Server Started");
