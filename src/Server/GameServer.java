@@ -12,12 +12,13 @@ import GuessingGame.GuessingGame;
 public class GameServer {
 
 	private static final int PORT = 4005;
+	private static final int TOTAL_CLIENTS = 3;
 
 	public static void main(String[] args) throws IOException {
 
 		ArrayList<ClientHandler> clients = new ArrayList<ClientHandler>();
 		ServerSocket serverSocket = new ServerSocket(PORT);
-		ExecutorService pool = Executors.newFixedThreadPool(3);
+		ExecutorService pool = Executors.newFixedThreadPool(TOTAL_CLIENTS);
 		GuessingGame game = new GuessingGame();
 
 		System.out.println("ChatServer started");

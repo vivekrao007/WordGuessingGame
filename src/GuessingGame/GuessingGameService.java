@@ -8,9 +8,9 @@ public class GuessingGameService {
 	private ArrayList<Word> _words = new ArrayList<Word>();
 
 	GuessingGameService() {
-		_words.add(new Word(1, "test1", "this is test1 for purpose"));
-		_words.add(new Word(2, "test2", "this is test2 for purpose"));
-		_words.add(new Word(3, "test3", "this is test3 for purpose"));
+		_words.add(new Word(1, "java", "most used OOP language"));
+		_words.add(new Word(2, "xml", "markup language"));
+		_words.add(new Word(3, "angular", "javascript framework"));
 	}
 
 	// returns list of words.
