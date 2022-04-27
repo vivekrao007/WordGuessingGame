@@ -46,21 +46,19 @@ public class ClientHandler extends Thread {
         try {
             String request;
             startNewRound();
-            println(" " + GetScore());
+            println("Score" + GetScore());
 
             while ((request = in.readLine()) != null) {
                 request = request.toLowerCase();
                 if (Checktimer()) {
-                    println("Time is up");
-                    println(CurrentWord.getWord());
-                    println(" " + GetScore());
+                    println("Time is up" + "The correct word is: "+ CurrentWord.getWord());
                     startNewRound();
                     continue;
                 }
                 if (IsMatchCompleted()) {
                     println("You have completed the game");
                     // println("Your score is : " + GetScore());
-                    println(" " + GetScore());
+                    println("Score" + GetScore());
                     println("BroadCastWinner");
                     BroadCastWinner();
                     continue;
@@ -70,24 +68,21 @@ public class ClientHandler extends Thread {
                 }
                 if (request.equals("!hint")) {
                     updateScore(-10);
-                    println(CurrentWord.getHint());
-                    println(" " + GetScore());
+                    println( "Hint: "+ CurrentWord.getHint());
+                    println("Score" + GetScore());
                     continue;
                 } else if (request.equals("!quit")) {
                     System.out.printf("Quit the game!\n");
-                    println("DoNotStartNewRound");
                     break;
                 } else {
                     if (VerifyWord(request)) {
                         updateScore(100);
                         println("Correct");
                         println("You gussed the word");
-                        println(" " + GetScore());
+                        println("Score " + GetScore());
                         startNewRound();
                     } else {
                         println("Incorrect Guess");
-                        println(" " + GetScore());
-                        println("DoNotStartNewRound");
                     }
                 }
             }
@@ -146,13 +141,11 @@ public class ClientHandler extends Thread {
         if (!IsMatchCompleted()) {
             CurrentWord = GuessingGame.GetWordAtIndex(Round);
             StartTimer();
-            println("3");
             println("Starting new round ");
             println("Round : " + Round + "/" + GuessingGame.GetNumberOfWord());
             println("You have " + (TIME_LIMIT / 1000) + " seconds to guess the word ");
             println("The word is of length: " + CurrentWord.getWord().length());
         } else {
-            println("1");
             println("Your game is completed.");
             println("Waiting for other players to complete the game..");
 
