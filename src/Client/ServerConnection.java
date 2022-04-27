@@ -21,8 +21,8 @@ public class ServerConnection extends JFrame implements Runnable {
 	private JLabel timer;
 	private JLabel score;
 	// private static int hint = 0;
-	private String playerScore;
-	private static int finishGame = 0;
+//	private String playerScore;
+//	private static int finishGame = 0;
 
 	public ServerConnection(Socket s) throws IOException {
 
@@ -156,6 +156,7 @@ public class ServerConnection extends JFrame implements Runnable {
 
 		try {
 			if (message.equals("startNewRound")) {
+				hintButton.setEnabled(true);
 				result.setText("\n");
 				word.setText("");
 				return;
@@ -164,6 +165,7 @@ public class ServerConnection extends JFrame implements Runnable {
 			{
 				result.setText("\nA hint has been displayed");
 				hintLabel.setText(message);
+				hintButton.setEnabled(false);
 			}
 			else if(message.contains("Score"))
 			{
@@ -171,12 +173,16 @@ public class ServerConnection extends JFrame implements Runnable {
 				score.setText(message);
 			}
 			else if(message.contains("Time is up")) {
+				System.out.println(message);
+
 				String[] newmsg = message.split("The", 2);
 				result.append(newmsg[0] + '\n');
-				System.out.println(newmsg[0]);
 				word.setText("The " + newmsg[1]);
+				System.out.println(newmsg[1]);
+
 				textArea.setText("");
 				hintLabel.setText("");
+				
 			}
 			else if(message.contains("Incorrect Guess")) {
 				result.append(message + '\n');
@@ -199,7 +205,7 @@ public class ServerConnection extends JFrame implements Runnable {
 	@Override
 	public void run() {
 
-
+		
 		try {
 			while (true) {
 				String serverResponse = in.readLine();

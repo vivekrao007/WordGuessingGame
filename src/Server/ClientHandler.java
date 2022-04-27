@@ -47,11 +47,11 @@ public class ClientHandler extends Thread {
             String request;
             startNewRound();
             println("Score" + GetScore());
-
             while ((request = in.readLine()) != null) {
                 request = request.toLowerCase();
                 if (Checktimer()) {
-                    println("Time is up" + "The correct word is: " + CurrentWord.getWord());
+                    println("Time is up" + "The correct word is: "+ CurrentWord.getWord());
+                    sleep(3000);
                     startNewRound();
                     continue;
                 }
@@ -68,7 +68,7 @@ public class ClientHandler extends Thread {
                 }
                 if (request.equals("!hint")) {
                     updateScore(-10);
-                    println("Hint: " + CurrentWord.getHint());
+                    println( "Hint: "+ CurrentWord.getHint());
                     println("Score" + GetScore());
                     continue;
                 } else if (request.equals("!quit")) {
@@ -121,11 +121,11 @@ public class ClientHandler extends Thread {
     public synchronized int GetScore() {
         return Score;
     }
-
+    
     public String getUUID() {
         return UNIQUE_ID;
     }
-
+    
     public boolean VerifyWord(String text) {
         if (CurrentWord.getWord().equals(text)) {
             return true;
@@ -167,6 +167,7 @@ public class ClientHandler extends Thread {
         boolean EveyoneCompletedGame = true;
 
         for (ClientHandler client : AllClients) {
+
             // if (!client.IsMatchCompleted())
             // EveyoneCompletedGame = false;
             if (!client.IsMatchCompleted())
@@ -178,14 +179,17 @@ public class ClientHandler extends Thread {
                     .thenComparing(ClientHandler::GetTotalTimeTaken);
             ArrayList<ClientHandler> temp = (ArrayList<ClientHandler>) AllClients.stream()
                     .sorted(compareByScore).collect(Collectors.toList());
-
-            String WinnerUUID = temp.get(temp.size() - 1).UNIQUE_ID;
             
+            String WinnerUUID = temp.get(temp.size() - 1).UNIQUE_ID;
+
             for (ClientHandler client : AllClients) {
-                client.println("Game has been completed : " + temp.get(0).UNIQUE_ID + " is the winner");
                 if (client.getUUID().equals(WinnerUUID)) {
                     client.println("You are the winner ... !!");
                 }
+                else {
+                    client.println("Game has been completed : " + temp.get(0).UNIQUE_ID + " is the winner");
+                }
+                
             }
         }
 
