@@ -21,7 +21,7 @@ public class GameServer {
 		ExecutorService pool = Executors.newFixedThreadPool(TOTAL_CLIENTS);
 		GuessingGame game = new GuessingGame();
 
-		System.out.println("ChatServer started");
+		System.out.println("Game Server Started");
 		System.out.println("[SERVER] waiting for client connections");
 		try {
 			while (true) {
